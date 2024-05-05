@@ -5,27 +5,46 @@ import { Square } from './components/Square'
 import { TURNS } from './constants'
 import { checkWinner, checkEndGame } from './logic/board'
 import { WinnerModal } from './components/WinnerModal'
+import { saveGameStorage,resetGameStorage } from './logic/storage'
 
 function App() {
-  const [board, setBoard] = useState(Array(9).fill(null))
-  const [turn, setTurn] = useState(TURNS.X)
+  //useState no debe estar en if debe estar en el cuerpo
+  const [board, setBoard] = useState(()=>{
+    //Inicialización de Estado
+    const boardFromStorage = window.localStorage.getItem('board')
+    return boardFromStorage ? JSON.parse(boardFromStorage) : Array(9).fill(null)
+  })
+
+  const [turn, setTurn] = useState(() =>{
+    const turnFormStorage = window.localStorage.getItem('turn')
+    return turnFormStorage ?? TURNS.X
+  })
   const [winner, setWinner] = useState(null)
 
-  
+  const resetGame = () => {
+    setBoard(Array(9).fill(null))
+    setTurn(TURNS.X)
+    setWinner(null)
+
+    resetGameStorage()
+  }
+
   const updateBoard = (index) => {
     // no actualizamos esta posición
     //si ya tiene algo
     if(board[index] || winner) return;
-
+  
     // siempre se crea uno nuevo para que no se reescriba 
     //ya que son inmutables los estados
     const newBoard = [...board] 
     newBoard[index] = turn
     setBoard(newBoard)
-
+  
     const newTurn = turn === TURNS.X ? TURNS.O : TURNS.X
     setTurn(newTurn)
-
+    // guardar aqui partida
+    saveGameStorage(newBoard, newTurn)
+  
     //revisar si hay ganador
     const newWinner = checkWinner(newBoard)
     if(newWinner){
@@ -36,11 +55,6 @@ function App() {
     }
   }
 
-  const resetGame = () => {
-    setBoard(Array(9).fill(null))
-    setTurn(TURNS.X)
-    setWinner(null)
-  }
 
   return (
     <main className="board">

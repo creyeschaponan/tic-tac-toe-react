@@ -36,7 +36,7 @@
 
 ## Créditos
 
-Este juego fue desarrollado por [Tu Nombre o Alias](https://github.com/tunombre) como parte de un proyecto de aprendizaje de React. Se basa en el tutorial oficial de React.
+Este juego fue desarrollado por [Creyes](https://github.com/creyeschaponan) como parte de un proyecto de aprendizaje de React. Se basa en el tutorial oficial de React.
 
 ## Licencia
 
